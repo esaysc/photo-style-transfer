@@ -1,0 +1,26 @@
+{
+    "Material": {
+        "AcrylicBlurRadius": 15
+    },
+    "Update": {
+        "CheckUpdateAtStartUp": true
+    },
+    "Folders": {
+        "Download": "M:/python/photo-style-transfer/app/download",
+        "Output": "M:\\python\\photo-style-transfer\\app\\output",
+        "Input": "M:\\python\\photo-style-transfer\\app\\input",
+        "Datasets": "M:\\python\\photo-style-transfer\\app\\input\\datasets",
+        "Models": "M:\\python\\photo-style-transfer\\app\\output\\models",
+        "CheckpointDir": [],
+        "LocalMusic": []
+    },
+    "MainWindow": {
+        "DpiScale": "Auto",
+        "Language": "zh_CN",
+        "MicaEnabled": true
+    },
+    "QFluentWidgets": {
+        "ThemeColor": "#ff009faa",
+        "ThemeMode": "Dark"
+    }
+}
