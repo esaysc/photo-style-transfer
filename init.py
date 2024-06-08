@@ -69,9 +69,10 @@ def update_pyproject():
     article_info = {}
     data = json.loads(json.dumps(article_info))
     files = []
+    files.append("main.py")
     
     for suffix in suffixList:
-        pathlist = Path(basePath).glob("**/*" + suffix)
+        pathlist = Path(appPath).glob("**/*" + suffix)
         for path in pathlist:
             pathStr = str(path).replace("\\","/")
             if (os.path.basename(str(pathStr)).find("init")) != -1:
@@ -100,7 +101,8 @@ def projectRun():
 # os.system("dir")
 # projectRun()
 # update_pro()
-# update_pyproject()
+# print("basePath => ", basePath)
+update_pyproject()
 # # 翻译文件
 # pylupdate6("gallery.zh_CN")
 # # 编译翻译文件为二进制文件 提供给运行时程序

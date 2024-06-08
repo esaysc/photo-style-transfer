@@ -15,31 +15,29 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QMenuBar,
-    QPushButton, QSizePolicy, QStatusBar, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QFormLayout, QHBoxLayout, QMainWindow,
+    QMenuBar, QPushButton, QSizePolicy, QStatusBar,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(800, 606)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayoutWidget = QWidget(self.centralwidget)
-        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(180, 30, 441, 411))
-        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
+        self.formLayout = QFormLayout(self.centralwidget)
+        self.formLayout.setObjectName(u"formLayout")
+        self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.pushButton = QPushButton(self.verticalLayoutWidget)
+        self.pushButton = QPushButton(self.centralwidget)
         self.pushButton.setObjectName(u"pushButton")
 
         self.horizontalLayout.addWidget(self.pushButton)
 
-        self.pushButton_3 = QPushButton(self.verticalLayoutWidget)
+        self.pushButton_3 = QPushButton(self.centralwidget)
         self.pushButton_3.setObjectName(u"pushButton_3")
 
         self.horizontalLayout.addWidget(self.pushButton_3)
@@ -47,15 +45,18 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
-        self.pushButton_4 = QPushButton(self.verticalLayoutWidget)
+        self.pushButton_4 = QPushButton(self.centralwidget)
         self.pushButton_4.setObjectName(u"pushButton_4")
 
         self.verticalLayout.addWidget(self.pushButton_4)
 
-        self.pushButton_2 = QPushButton(self.verticalLayoutWidget)
+        self.pushButton_2 = QPushButton(self.centralwidget)
         self.pushButton_2.setObjectName(u"pushButton_2")
 
         self.verticalLayout.addWidget(self.pushButton_2)
+
+
+        self.formLayout.setLayout(0, QFormLayout.LabelRole, self.verticalLayout)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)

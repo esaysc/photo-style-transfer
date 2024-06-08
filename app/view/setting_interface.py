@@ -28,10 +28,10 @@ class SettingInterface(ScrollArea):
 
         # music folders
         self.musicInThisPCGroup = SettingCardGroup(
-            self.tr("Music on this PC"), self.scrollWidget)
+            self.tr("此PC上的模型"), self.scrollWidget)
         self.musicFolderCard = FolderListSettingCard(
             cfg.musicFolders,
-            self.tr("Local music library"),
+            self.tr("本地模型库"),
             directory=QStandardPaths.writableLocation(
                 QStandardPaths.MusicLocation),
             parent=self.musicInThisPCGroup

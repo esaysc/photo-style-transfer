@@ -70,32 +70,32 @@ class MainWindow(FluentWindow):
         # add navigation items
         t = Translator()
         self.addSubInterface(self.homeInterface, FIF.HOME, self.tr('Home'))
-        self.addSubInterface(self.iconInterface, Icon.EMOJI_TAB_SYMBOLS, t.icons)
+        # self.addSubInterface(self.iconInterface, Icon.EMOJI_TAB_SYMBOLS, t.icons)
         self.navigationInterface.addSeparator()
 
         pos = NavigationItemPosition.SCROLL
-        self.addSubInterface(self.basicInputInterface, FIF.CHECKBOX,t.basicInput, pos)
-        self.addSubInterface(self.dateTimeInterface, FIF.DATE_TIME, t.dateTime, pos)
-        self.addSubInterface(self.dialogInterface, FIF.MESSAGE, t.dialogs, pos)
-        self.addSubInterface(self.layoutInterface, FIF.LAYOUT, t.layout, pos)
-        self.addSubInterface(self.materialInterface, FIF.PALETTE, t.material, pos)
-        self.addSubInterface(self.menuInterface, Icon.MENU, t.menus, pos)
-        self.addSubInterface(self.navigationViewInterface, FIF.MENU, t.navigation, pos)
-        self.addSubInterface(self.scrollInterface, FIF.SCROLL, t.scroll, pos)
-        self.addSubInterface(self.statusInfoInterface, FIF.CHAT, t.statusInfo, pos)
-        self.addSubInterface(self.textInterface, Icon.TEXT, t.text, pos)
-        self.addSubInterface(self.viewInterface, Icon.GRID, t.view, pos)
+        # self.addSubInterface(self.basicInputInterface, FIF.CHECKBOX,t.basicInput, pos)
+        # self.addSubInterface(self.dateTimeInterface, FIF.DATE_TIME, t.dateTime, pos)
+        # self.addSubInterface(self.dialogInterface, FIF.MESSAGE, t.dialogs, pos)
+        # self.addSubInterface(self.layoutInterface, FIF.LAYOUT, t.layout, pos)
+        # self.addSubInterface(self.materialInterface, FIF.PALETTE, t.material, pos)
+        # self.addSubInterface(self.menuInterface, Icon.MENU, t.menus, pos)
+        # self.addSubInterface(self.navigationViewInterface, FIF.MENU, t.navigation, pos)
+        # self.addSubInterface(self.scrollInterface, FIF.SCROLL, t.scroll, pos)
+        # self.addSubInterface(self.statusInfoInterface, FIF.CHAT, t.statusInfo, pos)
+        # self.addSubInterface(self.textInterface, Icon.TEXT, t.text, pos)
+        # self.addSubInterface(self.viewInterface, Icon.GRID, t.view, pos)
 
         # add custom widget to bottom
-        self.navigationInterface.addItem(
-            routeKey='price',
-            icon=Icon.PRICE,
-            text=t.price,
-            onClick=self.onSupport,
-            selectable=False,
-            tooltip=t.price,
-            position=NavigationItemPosition.BOTTOM
-        )
+        # self.navigationInterface.addItem(
+        #     routeKey='price',
+        #     icon=Icon.PRICE,
+        #     text=t.price,
+        #     onClick=self.onSupport,
+        #     selectable=False,
+        #     tooltip=t.price,
+        #     position=NavigationItemPosition.BOTTOM
+        # )
         self.addSubInterface(
             self.settingInterface, FIF.SETTING, self.tr('Settings'), NavigationItemPosition.BOTTOM)
 
@@ -103,7 +103,7 @@ class MainWindow(FluentWindow):
         self.resize(960, 780)
         self.setMinimumWidth(760)
         self.setWindowIcon(QIcon(':/gallery/images/logo.png'))
-        self.setWindowTitle('PyQt-Fluent-Widgets')
+        self.setWindowTitle('photo-style-transfer')
 
         self.setMicaEffectEnabled(cfg.get(cfg.micaEnabled))
 
