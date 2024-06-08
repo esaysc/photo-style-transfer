@@ -49,13 +49,18 @@ class TrainInterface(QWidget):
 
         grid.setColumnStretch(2, 1)
     def train(self):
+        
         print("训练模型")
         c = self.contentWidget.modePath
         s = self.styleWidget.modePath
+        
+        if c=='' or s == '':
+            self.trainWidget.showSimpleFlyout(self.tr("提示"), self.tr("没有选择内容图片或风格图片"), self.trainButton)
+            return
         list_c = glob.glob(c + '/*')
         list_s = glob.glob(s + '/*')
         if list_c == [] or list_s == []:
-            self.trainWidget.showSimpleFlyout(self.tr("提示"), self.tr("没有选择内容图片或风格图片"), self.trainButton)
+            print("文件夹为空")
             return
         dir = c.split('\\')[-1] + "2" + s.split('\\')[-1]
         checkpoint_path = os.path.join(cfg.datasets.value, dir, "checkpoint")

@@ -60,12 +60,9 @@ class CycleGANInterface(QWidget):
         pthBox = self.pthBox
         pthBox.setCurrentIndex(0)
         pthBox.setMinimumWidth(210)
-        print("cfg.models.value => ", cfg.models.value)
         dir = os.path.join(cfg.models.value)
-        print("dir =>", dir)
         if os.path.isdir(dir):
             for root, dirs, files in os.walk(dir):
-                print("dirs => ", dirs)
                 pthBox.addItems(dirs)
                 for dir in dirs:
                     self.pths.append(os.path.join(root, dir, "checkpoint"))
@@ -81,7 +78,6 @@ class CycleGANInterface(QWidget):
     def updatePth(self, index):
         self.pthIndex = index
         self.pth = self.pths[index]
-        print(index, self.pths)
 
     def create(self):
         print("尝试生成图片")
@@ -90,16 +86,17 @@ class CycleGANInterface(QWidget):
         pth = self.pth
         if len(list_A) == 0 or len(list_B) == 0 or self.pth == '':
             self.contentWidget.showSimpleFlyout(self.tr("提示"), self.tr("没有选择内容图片或风格图片或模型"), self.createButton)
-        print("self.pth => ", self.pth)
-
-        print("list_A => {}, list_B => {}".format(list_A, list_B))
+            return
+        # 开始生成图片
         output_dir = os.path.join(cfg.outputFolder.value, "image", str(datetime.date.today().strftime('%Y-%m-%d')))
-        # if not os.path.isdir(output_dir):
-        #     os.makedirs(output_dir)
         output_dir = output_dir.replace('\\', '/')
+        
+
+        # 模型路径
         pth = self.pth.replace('\\', '/')
         output_dir = os.path.join(output_dir, pth.split('/')[-2])
-        print("output_dir => ", output_dir)
+        if not os.path.isdir(output_dir):
+            os.makedirs(output_dir)
         g = GeneratorImage(list_A, list_B, self.pth, output_dir)
         outputFiles = g.run()
         contentOut = QVBoxLayout()

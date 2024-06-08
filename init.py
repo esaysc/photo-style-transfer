@@ -107,4 +107,4 @@ def projectRun():
 # lrelease("gallery.zh_CN")
 # rcc = os.system("cd " + resourcePath + " && pyside6-rcc -o ../common/resource.py resource.qrc") # 使用a接收返回值
 # print(rcc)
-os.system("pip freeze > requirements.txt")
+# os.system("pip freeze > requirements.txt")

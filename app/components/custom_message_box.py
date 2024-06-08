@@ -1,6 +1,6 @@
 
-from qfluentwidgets import MessageBox, SubtitleLabel, LineEdit
-class CustomMessageBox(MessageBox):
+from qfluentwidgets import MessageBoxBase, SubtitleLabel, LineEdit
+class CustomMessageBox(MessageBoxBase):
     """ Custom message box """
 
     def __init__(self,title,placeholderText, parent=None):

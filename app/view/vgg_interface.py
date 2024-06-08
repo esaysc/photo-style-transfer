@@ -3,11 +3,11 @@ import os
 import glob
 import uuid
 from PySide6.QtWidgets import (QWidget, QGridLayout, QSpacerItem, 
-                               QSizePolicy, QHBoxLayout, QLabel)
+                               QSizePolicy, QHBoxLayout, QLabel, QLineEdit)
+from PySide6.QtCore import Qt
 from app.components.source_button_widget import SourceButtonWidget
-from app.components.out_button_widget import OutButtonWidget
 from app.common.config import cfg
-from qfluentwidgets import ComboBox, ProgressRing, SpinBox
+from qfluentwidgets import ComboBox, ProgressRing, SpinBox, InfoBarPosition, InfoBar
 
 
 
@@ -17,7 +17,6 @@ class VGGInterface(QWidget):
         super().__init__(parent=parent)
         # ---------------------------------- 初始化 ----------------------------------
         outputfile = cfg.outputFolder.value + '/image/' + datetime.date.today().strftime('%Y-%m-%d') + '/' + str(uuid.uuid4()) + '.jpg'
-        print("outputfile => ", outputfile)
 
         self.content_img_path, self.style_img_path, self.output_img_path = '', '', outputfile
 
@@ -30,7 +29,7 @@ class VGGInterface(QWidget):
         # 创建输入、输出、风格 对象
         inputWidget = SourceButtonWidget()
         styleWidget = SourceButtonWidget()
-        outWidget = OutButtonWidget()
+        outWidget = SourceButtonWidget()
 
         self.inputWidget = inputWidget
         self.styleWidget = styleWidget
@@ -48,11 +47,13 @@ class VGGInterface(QWidget):
         self.inputButton.setText('选择输入图片')
         self.outButton.setText('风格迁移')
         self.styleButton.setText('选择风格图片')
-        
+        self.info_le = QLineEdit(self)  # 用于显示最终选择
+        self.info_label = QLabel(self)  # 用于显示当前选择
         # progress ring
         ring = ProgressRing(self)
         ring.setFixedSize(80, 80)
         ring.setTextVisible(True)
+        grid.addWidget(ring,4,1,1,1)       # 显示文件最终选择路径
 
         comboBox1 = ComboBox()
         comboBox2 = ComboBox()
@@ -69,8 +70,8 @@ class VGGInterface(QWidget):
         # 加入到网格布局
 
         # 第一行 显示输出图片路径
-        grid.addWidget(outWidget.info_le,0,1,1,1)       # 显示文件最终选择路径
-        grid.addWidget(outWidget.info_label,0,0,1,1)    # 显示当前选择路径
+        grid.addWidget(self.info_le,0,1,1,1)       # 显示文件最终选择路径
+        grid.addWidget(self.info_label,0,0,1,1)    # 显示当前选择路径
 
         # 第二行 显示选择图片按钮
         grid.addWidget(inputWidget.sourceButton, 1, 0, 1, 1)    
@@ -122,8 +123,13 @@ class VGGInterface(QWidget):
         self.output_img_path = path
 
     def transfer(self):
-        # self.output_img_path = self.outWidget.dialog.getExistingDirectory()
-        # self.output_img_path = self.outWidget.dialog.getSaveFileName(self, "保存图片", "", "图片文件(*.jpg *.png *.jpeg)")[0]
+        c = self.content_img_path
+        s = self.style_img_path
+        o = self.output_img_path
+        if(c == '' or s == '') :
+            self.createBottomInfoBar(self.tr('提示'), self.tr('未选择内容图片或风格图片'))
+            # self.createBottomInfoBar(self.tr('提示'), self.tr('请选择图片'))
+            return
         inputW = self.inputWidget.w
         inputH = self.inputWidget.h
         styleW = self.styleWidget.w
@@ -143,9 +149,20 @@ class VGGInterface(QWidget):
             outputW = int(inputW * 0.55)
             outputH = int(inputW * 0.55)   
         
-        self.outWidget.transfer(self.content_img_path, self.style_img_path, self.output_img_path, outputW, outputH)
+        self.outWidget.transfer(c, s, o, outputW, outputH)
 
-
+    def createBottomInfoBar(self, title, content):
+        InfoBar.success(
+            title,
+            content,
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.BOTTOM,
+            duration=2000,    # won't disappear automatically
+            parent=self
+        )
+        
+   
 class ProgressWidget(QWidget):
 
     def __init__(self, widget, parent=None):

@@ -2,10 +2,14 @@ import itertools
 import os
 import shutil
 from PySide6.QtWidgets import QWidget, QPushButton, QFileDialog, QGridLayout, QVBoxLayout
-from qfluentwidgets import ImageLabel, Flyout, FlyoutAnimationType, InfoBarIcon, MessageBox
+from qfluentwidgets import (ImageLabel, Flyout, FlyoutAnimationType, InfoBarIcon, MessageBox,
+                            FlyoutAnimationType, Flyout, CommandBarView, Action)
+from qfluentwidgets import FluentIcon as FIF
+from PySide6.QtCore import Qt, QPoint,QStandardPaths
 from PySide6.QtGui import QImageReader, QPixmap
 from .custom_message_box import CustomMessageBox
 from app.common.config import cfg
+from app.algorithm.vgg.vgg_torch import NeuralStyleTransfer
 
 class SourceButtonWidget(QWidget):
     """ Source button widget """
@@ -38,6 +42,7 @@ class SourceButtonWidget(QWidget):
         # 连接信号与槽
         self.sourceButton.clicked.connect(self.dialog.open)
         self.selectsButton.clicked.connect(self.dialogFiles.open)
+        self.imageLabel.clicked.connect(self.createCommandBarFlyout)
 
 
     def loadImage(self, path):
@@ -66,6 +71,8 @@ class SourceButtonWidget(QWidget):
             img = QPixmap(path)   # 加入圖片
             imageLabel = ImageLabel()
             imageLabel.setImage(img)
+            imageLabel.clicked.connect(self.createCommandBarFlyout)
+            
             w = img.width()
             h = img.height()
             if w > h:
@@ -103,7 +110,7 @@ class SourceButtonWidget(QWidget):
             datasets = cfg.datasets.value
             dst_dir = os.path.join(datasets, dir)
             if os.path.isdir(dst_dir) and self.showMessageDialog(self.tr("检查文件路径"), self.tr("文件夹已存在，是否需要销毁原文件夹中的文件")):
-                shutil.rmtree(modePath)
+                shutil.rmtree(dst_dir)
             for path in paths:
                 print("原文件路径 => ", path)
                 filename = path.split("/")[-1]
@@ -112,11 +119,7 @@ class SourceButtonWidget(QWidget):
                 self.copy_file(path, dst_file)
             print("复制图片完成")
 
-    def showMessageDialog(self, title, content):
-        w = MessageBox(title, content, self.window())
-        w.setContentCopyable(True)
-        return w.exec()
-    
+ 
     def copy_file(self, src_file, dst_file):
         dir = os.path.dirname(dst_file)
         if not os.path.isdir(dir):
@@ -177,6 +180,9 @@ class SourceButtonWidget(QWidget):
         # 文件模式
         self.dialogFiles.setFileMode(QFileDialog.FileMode.ExistingFiles)  # 只能选择单个现有文件
         self.dialogFiles.setNameFilter('图片文件(*.jpg *.png *.jpeg)')
+        
+    # ------------------------ 以下为提示函数 ------------------------
+    # 显示提示信息
     def showFlyout(self):
         Flyout.create(
             icon=InfoBarIcon.INFORMATION,
@@ -187,3 +193,49 @@ class SourceButtonWidget(QWidget):
             isClosable=True,
             aniType=FlyoutAnimationType.PULL_UP
         )
+    # 底部显示提示信息
+    def createCommandBarFlyout(self):
+        view = CommandBarView(self)
+
+        view.addAction(Action(FIF.SHARE, self.tr('Share')))
+        view.addAction(Action(FIF.SAVE, self.tr('Save'), triggered=self.saveImage))
+        view.addAction(Action(FIF.HEART, self.tr('Add to favorate')))
+        view.addAction(Action(FIF.DELETE, self.tr('Delete')))
+
+        view.addHiddenAction(Action(FIF.PRINT, self.tr('Print'), shortcut='Ctrl+P'))
+        view.addHiddenAction(Action(FIF.SETTING, self.tr('Settings'), shortcut='Ctrl+S'))
+        view.resizeToSuitableWidth()
+
+        x = self.imageLabel.width()
+        pos = self.imageLabel.mapToGlobal(QPoint(x, 0))
+        Flyout.make(view, pos, self, FlyoutAnimationType.FADE_IN)
+    # 对话框 提示信息
+    def showMessageDialog(self, title, content):
+        w = MessageBox(title, content, self.window())
+        w.setContentCopyable(True)
+        return w.exec()
+    # ----------------------- 功能函数 -------------------------
+    # 保存图片
+    def saveImage(self):
+        path, ok = QFileDialog.getSaveFileName(
+            self,
+            self.tr('Save image'),
+            QStandardPaths.writableLocation(QStandardPaths.StandardLocation.DesktopLocation),
+            'PNG (*.png)'
+        )
+        if not ok:
+            return
+
+        self.imageLabel.image.save(path) # type: ignore
+    
+    # 风格迁移
+    def transfer(self, content_img_path, style_img_path, output_img_path, w, h):
+        print("风格迁移 启动")
+        if(content_img_path == '' or style_img_path == '') :
+            print("风格迁移 缺少参数")
+            return
+        else:
+            print(content_img_path, style_img_path, output_img_path)
+            # self.dialog.open()
+            neural_style_transfer = NeuralStyleTransfer(content_img_path, style_img_path, output_img_path, width=w, height=h)
+            self.loadImage(neural_style_transfer.run())
